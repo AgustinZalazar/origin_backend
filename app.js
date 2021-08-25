@@ -1,25 +1,39 @@
 const express = require('express')
+require('dotenv').config();
+const cors = require("cors");
+const  db  = require('./database/db')
+
+
 const app = express();
-const mysql = require("mysql");
+app.use(express.json());
+app.use(cors());
 
-app.use(express.urlencoded({extended:false}));
-app.use(express.json);
 
-const dotenv = require('dotenv');
-dotenv.config({path:'./env/.env'});
-
-const db = mysql.createConnection({
-    user: "root",
-    host:"localhost",
-    password: "root",
-    database:"origin_users"
+app.post('/login', (req, res) =>{
+   const username = req.body.username;
+   const password = req.body.password;
+   
+   db.query(
+       "SELECT * FROM users WHERE username = ? AND password = ?",
+       [username, password],
+       (err, result) =>{
+           if (err) {
+                res.send(err);
+                console.log(err)
+           }
+           if (result) {
+                res.send(result);
+           }else {
+               res.send({message: "Contraseña o usuario erronea"})
+           }
+       }
+   )
 })
-
 
 app.get('/', (req, res) =>{
-   res.send('aasd')
+    res.send("test")
 })
 
-app.listen(3001, (req, res) =>{
-    console.log('server running in http://localhost:3001')
+app.listen(8080, (req, res) =>{
+    console.log('server running in http://localhost:8080')
 })
