@@ -1,4 +1,5 @@
 const express = require('express')
+const jwt = require('jsonwebtoken')
 require('dotenv').config();
 const cors = require("cors");
 const  db  = require('./database/db')
@@ -22,7 +23,15 @@ app.post('/login', (req, res) =>{
                 console.log(err)
            }
            if (result) {
-                res.send(result);
+               const userForToken = {
+                   id: 1,
+                   username: username
+               }
+               const token = jwt.sign(userForToken, '123')
+                res.send({
+                    username: username,
+                    token
+                });
            }else {
                res.send({message: "Contraseña o usuario erronea"})
            }
