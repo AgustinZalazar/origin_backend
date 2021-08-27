@@ -20,7 +20,7 @@ app.post('/login', (req, res) =>{
        (err, result) =>{
            if (err) {
                 res.send(err);
-                console.log(err)
+                // console.log(err)
            }
            if (result) {
                const userForToken = {
@@ -39,6 +39,23 @@ app.post('/login', (req, res) =>{
    )
 })
 
+app.get('/actionsByUser', (req, res) =>{
+    const id_user = req.query.id_user;
+    console.log(id_user)
+    db.query(
+        "SELECT * FROM acciones WHERE id_user = ? ",
+        [id_user],
+        (err, result) =>{
+            if (err) {
+                 res.send(err);
+                 console.log(err)
+            }
+            if (result) {
+                res.send(result);
+            }
+        }
+    )
+ })
 app.get('/', (req, res) =>{
     res.send("test")
 })
