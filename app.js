@@ -20,7 +20,6 @@ app.post('/login', (req, res) =>{
        (err, result) =>{
            if (err) {
                 res.send(err);
-                // console.log(err)
            }
            if (result) {
                const userForToken = {
@@ -28,9 +27,11 @@ app.post('/login', (req, res) =>{
                    username: username
                }
                const token = jwt.sign(userForToken, '123')
+               const id_user = result[0].id_user
                 res.send({
                     username: username,
-                    token
+                    token,
+                    id_user
                 });
            }else {
                res.send({message: "Contraseña o usuario erronea"})
@@ -41,10 +42,45 @@ app.post('/login', (req, res) =>{
 
 app.get('/actionsByUser', (req, res) =>{
     const id_user = req.query.id_user;
-    console.log(id_user)
     db.query(
         "SELECT * FROM acciones WHERE id_user = ? ",
         [id_user],
+        (err, result) =>{
+            if (err) {
+                 res.send(err);
+                 console.log(err)
+            }
+            if (result) {
+                res.send(result);
+            }
+        }
+    )
+ })
+ app.delete('/actionByUser', (req, res) =>{
+    const id_acciones = req.query.id_acciones;
+    db.query(
+        "DELETE  FROM acciones WHERE id_acciones = ? ",
+        [id_acciones],
+        (err, result) =>{
+            if (err) {
+                 res.send(err);
+                 console.log(err)
+            }
+            if (result) {
+                res.send(result);
+            }
+        }
+    )
+ })
+ app.post('/actionByUser', (req, res) =>{
+    
+    const nombre = req.body.nombre;
+    const moneda = req.body.moneda;
+    const simbolo = req.body.simbolo;
+    const id_user = req.body.id_user;
+    db.query(
+        "INSERT INTO  acciones (nombre, simbolo,moneda,id_user) VALUES (?, ? , ? ,?)",
+        [nombre,moneda,simbolo,id_user],
         (err, result) =>{
             if (err) {
                  res.send(err);
