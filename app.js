@@ -1,6 +1,6 @@
 const express = require('express')
 const jwt = require('jsonwebtoken')
-require('dotenv').config();
+require('dotenv').config({ path: './.env.local' });
 const cors = require("cors");
 const  db  = require('./database/db')
 
